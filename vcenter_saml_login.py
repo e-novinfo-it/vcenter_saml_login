@@ -278,7 +278,7 @@ def sign_assertion(root, cert1, cert2, key):
         print('[*] Signing the SAML assertion')
         assertion_id = root.find("{urn:oasis:names:tc:SAML:2.0:assertion}Assertion").get("ID")
         signer = XMLSigner(c14n_algorithm="http://www.w3.org/2001/10/xml-exc-c14n#")
-        signed_assertion = signer.sign(root, reference_uri=assertion_id, key=key, cert=[cert1, cert2])
+        signed_assertion = signer.sign(root, reference_uri=assertion_id, key=key, cert=[cert2])
         return signed_assertion
     except:
         print('[-] Failed signing the SAML assertion')
