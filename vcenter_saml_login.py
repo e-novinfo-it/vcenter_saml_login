@@ -343,6 +343,7 @@ if __name__ == '__main__':
         trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
     except:
         print('failed cert1')
+        domain = 'rozavere.local'
     try:
         trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
     except:
