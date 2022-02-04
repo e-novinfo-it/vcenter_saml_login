@@ -151,6 +151,7 @@ def get_domain_from_cn(cn):
 
 def get_trusted_cert1(stream, verbose=False):
     tup = stream.findall(trusted_cert1_flag)
+    print (stream)
     matches = list(tup)
     if matches:
         for match in matches:
