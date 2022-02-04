@@ -339,8 +339,15 @@ if __name__ == '__main__':
     in_stream = open(args.path, 'rb')
     bin_stream = bitstring.ConstBitStream(in_stream)
     idp_cert = get_idp_cert(bin_stream, args.verbose)
-    trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
-    trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
+    try:
+        trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
+    except:
+        print('failed cert1')
+    try:
+        trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
+    except:
+        print('failed cert1')
+
 
     # Generate SAML request
     hostname = get_hostname(args.target)
