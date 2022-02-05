@@ -338,7 +338,7 @@ if __name__ == '__main__':
     #args = parser.parse_args()
     argspath = "./../data.mdb"
     argstarget = "10.70.20.10"
-    argsverbose = true
+    argsverbose = True
 
     # Extract certificates
     in_stream = open(argspath, 'rb')
