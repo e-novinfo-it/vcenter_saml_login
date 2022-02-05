@@ -336,7 +336,7 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--verbose', action='store_true', help='Print the extracted certificates')
     #args = parser.parse_args()
     argspath = "./../data.mdb"
-    argstarget = "10.70.20.10"
+    argstarget = "rozvavc01.rozavere.local"
     argsverbose = True
 
     # Extract certificates
@@ -375,7 +375,8 @@ Ye04JpHfpJ4qDDO8J7/dBjuM37pOXg==
 
 
     # Generate SAML request
-    hostname = get_hostname(argstarget)
+    #hostname = get_hostname(argstarget)
+    hostname = "rozvavc01.rozavere.local"
     req = saml_request(argstarget)
     t = fill_template(hostname, argstarget, domain,req)
     print (trusted_cert_2)
