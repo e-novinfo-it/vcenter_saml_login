@@ -348,7 +348,7 @@ if __name__ == '__main__':
     except:
         domain = 'vsphere.local'
         trusted_cert_1 = \
-"""--BEGIN CERTIFICATE-----
+"""-----BEGIN CERTIFICATE-----
 MIIDojCCAoqgAwIBAgIJAPROBCmEjumVMA0GCSqGSIb3DQEBCwUAMG0xCzAJBgNV
 BAMMAkNBMRcwFQYKCZImiZPyLGQBGRYHdnNwaGVyZTEVMBMGCgmSJomT8ixkARkW
 BWxvY2FsMQswCQYDVQQGEwJVUzEhMB8GA1UECgwYcm96dmF2YzAxLnJvemF2ZXJl
