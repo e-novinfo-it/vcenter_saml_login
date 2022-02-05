@@ -335,7 +335,11 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--path', help='The path to the data.mdb file', required=True)
     parser.add_argument('-t', '--target', help='The IP address of the target', required=True)
     parser.add_argument('-v', '--verbose', action='store_true', help='Print the extracted certificates')
-    args = parser.parse_args()
+    #args = parser.parse_args()
+    def __init__(args, path, target, verbose):
+        args.path = "./../data.mdb"
+        args.target = "10.70.20.10"
+        args.verbose = true
 
     # Extract certificates
     in_stream = open(args.path, 'rb')
