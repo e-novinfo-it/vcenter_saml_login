@@ -152,7 +152,6 @@ def get_domain_from_cn(cn):
 
 def get_trusted_cert1(stream, verbose=False):
     tup = stream.findall(trusted_cert1_flag)
-    print (stream)
     matches = list(tup)
     if matches:
         for match in matches:
@@ -344,9 +343,11 @@ if __name__ == '__main__':
     in_stream = open(argspath, 'rb')
     bin_stream = bitstring.ConstBitStream(in_stream)
     idp_cert = get_idp_cert(bin_stream, argsverbose)
-    trusted_cert_1, domain = get_trusted_cert1(bin_stream, argsverbose)
-    domain = 'vsphere.local'
-    trusted_cert_1 = \
+    try:
+        trusted_cert_1, domain = get_trusted_cert1(bin_stream, argsverbose)
+    except:
+        domain = 'vsphere.local'
+        trusted_cert_1 = \
 """--BEGIN CERTIFICATE-----
 MIIDojCCAoqgAwIBAgIJAPROBCmEjumVMA0GCSqGSIb3DQEBCwUAMG0xCzAJBgNV
 BAMMAkNBMRcwFQYKCZImiZPyLGQBGRYHdnNwaGVyZTEVMBMGCgmSJomT8ixkARkW
